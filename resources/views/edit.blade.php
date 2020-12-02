@@ -7,19 +7,32 @@
                 Edit Post
             </div>
             <div class="card-body">
-                <form action="/posts/{{$post->id}}" method="post">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                <!-- Name Routing and data pass -->
+                <form action="{{ route('posts.update',['post'=>$post->id]) }}" method="post">  
+                
                     @csrf
                     @method('PUT')
                     <div class="form-group">
                         <label for="exampleInputEmail1">Name</label>
-                        <input type="text" class="form-control" name="name" value="{{ $post->name }}" placeholder="Enter Name">
+                        <input type="text" class="form-control" name="name" value="{{ old('name',$post->name) }}" placeholder="Enter Name">
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Description</label>
-                        <textarea class="form-control" name="description" rows="5" placeholder="Enter Description">{{ $post->description }}</textarea>
+                        <textarea class="form-control" name="description" rows="5" placeholder="Enter Description">{{ old('description',$post->description) }}</textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
-                    <a href="/posts" class="btn btn-warning">Back</a>
+
+                    <!-- Normal Resource Routing -->
+                    <a href="/posts" class="btn btn-warning">Back</a>                   
                 </form>
             </div>
         </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use App\Http\Requests\storePostRequest;
 
 class HomeController extends Controller
 {
@@ -14,7 +15,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $posts = Post::all();
+        $posts = Post::orderBy('id','desc')->get();
         return view('home',compact('posts'));
     }
 
@@ -34,13 +35,18 @@ class HomeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(storePostRequest $request)
     {
-        $post = new Post();
-        $post->name = $request->name;
-        $post->description = $request->description;
+        // $post = new Post();
+        // $post->name = $request->name;
+        // $post->description = $request->description;
+        // $post->save();
 
-        $post->save();
+        Post::create([
+            'name'=>$request->name,
+            'description'=>$request->description,
+        ]);
+
         return redirect('/posts');
     }
 
@@ -50,9 +56,9 @@ class HomeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Post $post)
     {
-        $post = Post::findOrFail($id);
+        // dd($post->category->name);
         return view('view',compact('post'));
     }
 
@@ -62,9 +68,8 @@ class HomeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Post $post)
     {
-        $post = Post::findOrFail($id);
         return view('edit',compact('post'));
     }
 
@@ -75,13 +80,17 @@ class HomeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(storePostRequest $request, Post $post)
     {
-        $post = Post::findOrFail($id);
-        $post->name = $request->name;
-        $post->description = $request->description;
+        // $post->name = $request->name;
+        // $post->description = $request->description;
 
-        $post->save();
+        // $post->save();
+
+        $post->update([
+            'name'=>$request->name,
+            'description'=>$request->description,
+        ]);
         return redirect('/posts');
     }
 
@@ -91,9 +100,9 @@ class HomeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Post $post)
     {
-        Post::findOrFail($id)->delete();
+        $post->delete();
         return redirect('/posts');
     }
 }

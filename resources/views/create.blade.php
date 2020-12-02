@@ -8,15 +8,24 @@
                 New Post
             </div>
             <div class="card-body">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <form action="/posts" method="post">
                 @csrf
                     <div class="form-group">
                         <label for="exampleInputEmail1">Name</label>
-                        <input type="text" class="form-control" name="name" placeholder="Enter Name">
+                        <input type="text" class="form-control" name="name" placeholder="Enter Name" value="{{ old('name') }}">
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Description</label>
-                        <textarea class="form-control" name="description" rows="5" placeholder="Enter Description"></textarea>
+                        <textarea class="form-control" name="description" rows="5" placeholder="Enter Description">{{old('description')}}</textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                     <a href="/posts" class="btn btn-warning">Back</a>
