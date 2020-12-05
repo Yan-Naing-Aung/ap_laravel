@@ -27,6 +27,14 @@
                         <label for="exampleInputEmail1">Description</label>
                         <textarea class="form-control" name="description" rows="5" placeholder="Enter Description">{{old('description')}}</textarea>
                     </div>
+                    <div class="form-group">
+                        <select name="category_id" class="form-control">
+                            <option value="">Select Categories</option>
+                            @foreach($categories as $cat)
+                            <option value="{{$cat->id}}">{{$cat->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                     <a href="/posts" class="btn btn-warning">Back</a>
                 </form>
