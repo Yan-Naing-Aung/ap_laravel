@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\storePostRequest;
 
 class HomeController extends Controller
@@ -20,7 +21,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $posts = Post::orderBy('id','desc')->get();
+        $posts = Post::where('user_id',auth()->id())->orderBy('id','desc')->get();
         return view('home',compact('posts'));
     }
 
@@ -57,7 +58,21 @@ class HomeController extends Controller
      */
     public function show(Post $post)
     {
-        // dd($post->category->name);
+        // dd($post->category->name);   // model relationship
+
+        //** Authorization **/
+        // if($post->user_id != auth()->id())  //limiting access manual
+        // {
+        //     abort(403);
+        // }
+
+        //$this->authorize('view',$post);   // using postpolicy  
+
+        // if (! Gate::allows('allow-access', $post)) {   // using gate allow
+        //     abort(403);
+        // }
+        
+        Gate::authorize('allow-access', $post);  // using gate authorize
         return view('view',compact('post'));
     }
 
