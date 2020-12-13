@@ -1,5 +1,7 @@
 <?php
 
+use App\Test;
+use App\TestFacade;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
@@ -17,3 +19,12 @@ use App\Http\Controllers\HomeController;
 
 Route::resource('posts',HomeController::class);  //->middleware(['auth:sanctum', 'verified'])
 Route::get('logout',[AuthController::class,'logout']);
+
+Route::get('test',function(){
+    // app()->bind('test',function(){
+    //     return new Test();
+    // });
+    // $data = resolve('test');
+    
+    return TestFacade::test();
+});
