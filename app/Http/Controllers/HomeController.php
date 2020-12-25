@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Mail\storedPost;
 use App\Models\Category;
+use App\Mail\PostCreated;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\storePostRequest;
 
 class HomeController extends Controller
@@ -21,7 +25,11 @@ class HomeController extends Controller
      */
     public function index()
     {
+        // Mail::raw('Hello World',function($msg){
+        //     $msg->to('yannaingaung@gmail.com')->subject('AP Index Function');
+        // });
         $posts = Post::where('user_id',auth()->id())->orderBy('id','desc')->get();
+        //$request->session()->flash('status','Task was successful');
         return view('home',compact('posts'));
     }
 
@@ -45,9 +53,10 @@ class HomeController extends Controller
     public function store(storePostRequest $request)
     {
         $validated = $request->validated();
-        Post::create($validated);
+        $post = Post::create($validated + ['user_id' => Auth::user()->id]);
+        //Mail::to('yannaingaung@gmail.com')->send(new storedPost($post));
 
-        return redirect('/posts');
+        return redirect('/posts')->with('status',config('aprogrammer.message.created'));
     }
 
     /**
@@ -103,6 +112,7 @@ class HomeController extends Controller
         
         $validated = $request->validated();
         $post->update($validated);
+        Mail::to('yannaingaung@gmail.com')->send(new PostCreated());
         return redirect('/posts');
     }
 
